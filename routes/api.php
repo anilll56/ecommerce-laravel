@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\sellerProducks;
 use App\Http\Controllers\buyOrderController;
+use App\Models\sellerProduck;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,12 +24,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::post("/register", [UserController::class, 'userRegister111']);
-Route::post("/login", [UserController::class, 'userLogin3333']);
-Route::post("/addProduck", [sellerProducks::class, 'addProduck2222']);
+Route::post("/register", [UserController::class, 'userRegister']);
+Route::post("/login", [UserController::class, 'userLogin']);
+Route::post("/changePassword", [UserController::class, 'changePassword']);
+Route::post("/addProduck", [sellerProducks::class, 'addProduck']);
 Route::post("/updateProduck", [sellerProducks::class, 'updateProduck']);
 Route::post("/getUserProducts", [UserController::class, 'getUserProducts']);
-
+Route::post("/updateUser", [UserController::class, 'updateUser']);
 Route::post("/addBuyOrder", [buyOrderController::class, 'addBuyOrder']);
 Route::post("/getSellerOrders", [UserController::class, 'getSellerOrders']);
 Route::post("/getBuyerOrders", [UserController::class, 'getBuyerOrders']);
+Route::get("/getAllProduck", [sellerProduck::class, 'getAllProduck']);
+Route::post("/deleteProduck", [sellerProducks::class, 'deleteProduck']);
+Route::post("/updateOrderStatus", [buyOrderController::class, 'updateOrderStatus']);

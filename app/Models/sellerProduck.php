@@ -45,6 +45,16 @@ class sellerProduck extends Model
                 'colors' => $colors,
                 'pruduckImage' => $pruduckImage,
             ]);    
+            // $sellerProduck2 = new sellerProduck();
+            // $sellerProduck2->name = $name;
+            // $sellerProduck2->sellerId = $sellerId;
+            // $sellerProduck2->stock = $stock;
+            // $sellerProduck2->price = $price;
+            // $sellerProduck2->colors = $colors;
+            // $sellerProduck2->pruduckImage = $pruduckImage;
+            // $sellerProduck2->save();
+
+
             if ($sellerProduck) {
                 return (object) ['success' => true, 'message' => 'Product Added', 'sellerProduck' => $sellerProduck];
             } else {
@@ -92,6 +102,20 @@ class sellerProduck extends Model
             }
         } catch (\Exception $e) {
             return (object) ['success' => false, 'message' => 'Error updating product'  , 'error' => $e->getMessage()];
+        }
+    }
+
+    public function getAllProduck()
+    {
+        try {
+            $sellerProduck = DB::table('seller_produck')->get();
+            if ($sellerProduck) {
+                return (object) ['success' => true, 'message' => 'Product Found', 'sellerProduck' => $sellerProduck];
+            } else {
+                return (object) ['success' => false, 'message' => 'Product Not Found'];
+            }
+        } catch (\Exception $e) {
+            return (object) ['success' => false, 'message' => 'Error getting product'  , 'error' => $e->getMessage()];
         }
     }
 

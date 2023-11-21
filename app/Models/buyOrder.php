@@ -66,4 +66,21 @@ class buyOrder extends Model
             return (object) ['success' => false , 'message' => 'Error adding order'  , 'error' => $e->getMessage()];
         }
     }
+    public function updateOrderStatus(Request $request)
+    {
+        try{
+            $id = $request->input('id');
+            $status = $request->input('status');
+            $buyOrder = DB::table('buy_order')->where('id', $id)->update([
+                'status' => $status,
+            ]);
+            if($buyOrder){
+                return (object) ['success' => true , 'message' => 'Order Status Updated' ];
+            }else{
+                return (object) ['success' => false , 'message' => 'Order Status Not Updated'  , 'error' => "Error updating order status"];
+            }
+        }catch(\Exception $e){
+            return (object) ['success' => false , 'message' => 'Error updating order status'  , 'error' => $e->getMessage()];
+        }
+    }
 }

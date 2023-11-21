@@ -95,22 +95,22 @@ class User extends Authenticatable
         $password = $request->input('password');
     
         if ($userType == "buyer") {
-            $addUser = $this->create([
-                'name' => $name,
-                'email' => $email,
-                'userType' => $userType,
-                'address' => $address,
-                'phone' => $phone,
-                'balance' => $balance,
-                'password' => Hash::make($password),
-            ]);
+            $addUser = new User();
+            $addUser->name = $name;
+            $addUser->email = $email;
+            $addUser->userType = $userType;
+            $addUser->address = $address;
+            $addUser->phone = $phone;
+            $addUser->balance = $balance;
+            $addUser->password = Hash::make($password);
+            $addUser->save();
         } else {
-            $addUser = $this->create([
-                'name' => $name,
-                'email' => $email,
-                'userType' => $userType,
-                'password' => Hash::make($password),
-            ]);
+            $addUser = new User();
+            $addUser->name = $name;
+            $addUser->email = $email;
+            $addUser->userType = $userType;
+            $addUser->password = Hash::make($password);
+            $addUser->save();
         }
     
         if ($addUser) {
@@ -161,6 +161,26 @@ class User extends Authenticatable
             return (object) ['success' => true , 'message' => 'User Updated' ];
         } else {
             return (object) ['success' => false , 'message' => 'User Not Updated'  , 'error' => "Error updating user"];
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        $id = $request->input('id');
+        $password = $request->input('password');
+        $newPassword = $request->input('newPassword');
+        $user = $this->where('id', $id)->first();
+    
+        if ($user) {
+            if (Hash::check($password, $user->password)) {
+                $user->password = Hash::make($newPassword);
+                $user->save();
+                return (object) ['success' => true, 'message' => 'Password Changed'];
+            } else {
+                return (object) ['success' => false, 'error' => 'Invalid password'];
+            }
+        } else {
+            return (object) ['success' => false, 'error' => 'User not found'];
         }
     }
     

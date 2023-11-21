@@ -9,42 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 class sellerProducks extends Controller
 {
-    public function addProduck(Request $request)
-    {
-        $name = $request->input('name');
-        $sellerId = $request->input('sellerId');
-        $stock = $request->input('stock');
-        $price = $request->input('price');
-        $colors = $request->input('colors');
-        $pruduckImage = $request->input('pruduckImage');
-            $sellerProduck = DB::table('sellers_producks')->insert([
-                'name' => $name,
-                'sellerId' => $sellerId,
-                'stock' => $stock,
-                'price' => $price,
-                'colors' => $colors,
-                'pruduckImage' => $pruduckImage,
-            ]);
-            return response()->json([
-                'success' => true,
-                'message' => 'Produck Added',
-            ], 200);
-             if($sellerProduck){
-                 return response()->json([
-                     'success' => true,
-                     'message' => 'Produck Added',
-                 ], 200);
-                }else{
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Produck Not Added',
-                    ], 401);
-                }
-        
-    }
 
-
-    public function addProduck2222(Request $request){
+    public function addProduck(Request $request){
         $produckModal = new sellerProduck();
 
         $response = $produckModal->addProduck($request);
@@ -84,7 +50,7 @@ class sellerProducks extends Controller
     public function deleteProduck(Request $request)
     {
         $id = $request->input('id');
-        $sellerProduck = DB::table('sellerProduck')->where('id', $id)->delete();
+        $sellerProduck = DB::table('seller_produck')->where('id', $id)->delete();
         if ($sellerProduck) {
             return response()->json([
                 'success' => true,

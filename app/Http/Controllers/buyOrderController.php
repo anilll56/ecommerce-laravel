@@ -29,4 +29,21 @@ class buyOrderController extends Controller
             ], 401);
         }
     }
+
+    public function updateOrderStatus(Request $request){
+        $buyOrderModal = new buyOrder();
+        $response = $buyOrderModal->updateOrderStatus($request);
+        if($response->success){
+            return response()->json([
+                'success' => true,
+                'message' => 'Order Status Updated',
+            ], 200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Order Status Not Updated',
+                "error" => $response->error
+            ], 401);
+        }
+    }
 }
