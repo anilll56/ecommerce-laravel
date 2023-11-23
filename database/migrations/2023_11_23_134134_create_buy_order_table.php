@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('buy_order', function (Blueprint $table) {
             $table->id();
-            $table->string('buyerId');
-            $table->string('sellerId');
-            $table->string('produckId');
+            $table->unsignedBigInteger('buyer_id')->nullable();
+            $table->foreign('buyer_id')->references('id')->on('users')->onDelete('cascade');            
+            $table->unsignedBigInteger('seller_id')->nullable();
+            $table->foreign('seller_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('produck_id');
+            $table->foreign('produck_id')->references('id')->on('seller_produck')->onDelete('cascade');
             $table->string('produckName');
             $table->integer('produckPrice');
             $table->string('produckImage');

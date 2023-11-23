@@ -53,16 +53,16 @@ class User extends Authenticatable
 
     public function products()
     {
-        return $this->hasMany(sellerProduck::class, 'sellerId');
+        return $this->hasMany(sellerProduck::class, 'seller_id');
     }
     public function buyerOrders()
     {
-        return $this->hasMany(BuyOrder::class, 'buyerId');
+        return $this->hasMany(BuyOrder::class, 'buyer_id');
     }
 
     public function sellerOrders()
     {
-        return $this->hasMany(BuyOrder::class, 'sellerId');
+        return $this->hasMany(BuyOrder::class, 'seller_id');
     }
 
     public function userLogin(Request $request)

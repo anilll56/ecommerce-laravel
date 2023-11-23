@@ -15,7 +15,7 @@ class sellerProduck extends Model
 
     protected $fillable = [
         'name',
-        'sellerId',
+        'seller_id',
         'stock',
         'price',
         'colors',
@@ -24,36 +24,15 @@ class sellerProduck extends Model
     
     public function user()
     {
-        return $this->belongsTo(User::class, 'SellerId');
+        return $this->belongsTo(User::class, 'seller_id');
     }
 
     public function addProduck(Request $request)
     {
         try {
-            $name = $request->input('name');
-            $sellerId = $request->input('sellerId');
-            $stock = $request->input('stock');
-            $price = $request->input('price');
-            $colors = $request->input('colors');
-            $pruduckImage = $request->input('pruduckImage');
-    
-            $sellerProduck = DB::table('seller_produck')->insert([
-                'name' => $name,
-                'sellerId' => $sellerId,
-                'stock' => $stock,
-                'price' => $price,
-                'colors' => $colors,
-                'pruduckImage' => $pruduckImage,
-            ]);    
-            // $sellerProduck2 = new sellerProduck();
-            // $sellerProduck2->name = $name;
-            // $sellerProduck2->sellerId = $sellerId;
-            // $sellerProduck2->stock = $stock;
-            // $sellerProduck2->price = $price;
-            // $sellerProduck2->colors = $colors;
-            // $sellerProduck2->pruduckImage = $pruduckImage;
-            // $sellerProduck2->save();
-
+            $data = $request->only(['name', 'seller_id', 'stock', 'price', 'colors', 'pruduckImage']);
+             $sellerProduck = new sellerProduck();
+             $sellerProduck = sellerProduck::create($data);
 
             if ($sellerProduck) {
                 return (object) ['success' => true, 'message' => 'Product Added', 'sellerProduck' => $sellerProduck];

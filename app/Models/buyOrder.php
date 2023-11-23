@@ -15,45 +15,38 @@ class buyOrder extends Model
     protected $table = 'buy_order';
 
     protected $fillable = [
-        'buyerId',
-        'sellerId',
-        'sellerPhone',
-        'produckName',
-        'produckPrice',
-        'produckImage',
-        'produckColor',
-        'produckPieces',
-        'status',
+        'buyer_id', 
+        'seller_id', 
+        'produck_id', 
+        'produckName', 
+        'produckPrice', 
+        'produckImage', 
+        'produckColor', 
+        'produckPieces', 
+        'status'
     ];
+
 
     public function buyer()
     {
-        return $this->belongsTo(User::class, 'buyerId');
+        return $this->belongsTo(User::class, 'seller_id');
     }
 
     public function seller()
     {
-        return $this->belongsTo(User::class, 'sellerId');
+        return $this->belongsTo(User::class, 'seller_id');
     }
 
     public function addBuyOrder(Request $request)
     {
         try{
-            $buyOrder = DB::table('buy_order')->insert([
-                'buyerId' => $request->input('buyerId'),
-                'sellerId' => $request->input('sellerId'),
-                'produckId' => $request->input('produckId'),
-                'produckName' => $request->input('produckName'),
-                'produckPrice' => $request->input('produckPrice'),
-                'produckImage' => $request->input('produckImage'),
-                'produckColor' => $request->input('produckColor'),
-                'produckPieces' => $request->input('produckPieces'),
-                'status' => $request->input('status'),
-            ]);
-            $Buyeruser=User::where('id',$request->input('buyerId'))->first();
+            $data = $request->only(['buyer_id', 'seller_id', 'produck_id', 'produckName', 'produckPrice', 'produckImage', 'produckColor', 'produckPieces', 'status']);
+            $buyOrder = new buyOrder();
+            $buyOrder = buyOrder::create($data);
+            $Buyeruser=User::where('id',$request->input('buyer_id'))->first();
             $Buyeruser->balance=$Buyeruser->balance-$request->input('produckPrice');
             $Buyeruser->save();
-            $Produck=sellerProduck::where('id',$request->input('produckId'))->first();
+            $Produck=sellerProduck::where('id',$request->input('produck_id'))->first();
             $Produck->stock=$Produck->stock-$request->input('produckPieces');
             $Produck->save();
             

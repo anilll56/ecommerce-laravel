@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +15,8 @@ return new class extends Migration
         Schema::create('seller_produck', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('sellerId');
+            $table->unsignedBigInteger('seller_id')->nullable();
+            $table->foreign('seller_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('stock');
             $table->integer('price');
             $table->string('colors');
