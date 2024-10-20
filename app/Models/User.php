@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,8 +12,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\sellerProducks;
 
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -79,6 +82,43 @@ class User extends Authenticatable
             }
         } else {
             return (object) ['success' => false, 'error' => 'User not found'];
+        }
+    }
+    public function userInfo()
+    {
+        try {
+            // JWT token'dan kullanıcıyı doğrula
+            $user = JWTAuth::parseToken()->authenticate();
+
+            // Eğer kullanıcı doğrulandıysa bilgilerini döndür
+            if ($user) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'User info retrieved successfully',
+                    'user' => $user
+                ], 200);
+            } else {
+                // Kullanıcı bulunamadığında hata döndür
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found'
+                ], 404);
+            }
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token has expired'
+            ], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid token'
+            ], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token not found'
+            ], 401);
         }
     }
     
@@ -183,5 +223,14 @@ class User extends Authenticatable
             return (object) ['success' => false, 'error' => 'User not found'];
         }
     }
-    
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

@@ -8,25 +8,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redis;
+use Tymon\JWTAuth\Facades\JWTAuth; 
+use Illuminate\Support\Facades\Auth; 
 
 class UserController extends Controller
 {
     public function UserLogin(Request $request)
     {
-        $userModal = new User();
-        $response = $userModal->userLogin($request);
-        if ($response->success) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Login Successful',
-                'user' => $response->user
-            ], 200);
-        } else {
+        // Kullanıcı giriş bilgilerini doğrulayın
+        $credentials = $request->only('email', 'password');
+
+        // Eğer giriş bilgileri doğruysa, JWT token oluşturulacak
+        if (!$token = Auth::attempt($credentials)) {
             return response()->json([
                 'success' => false,
-                'message' => $response->error,
+                'message' => 'Invalid login credentials',
             ], 401);
         }
+        return response()->json([
+            'success' => true,
+            'message' => 'Login Successful',
+            'user' => Auth::user(),
+            'token' => $token, // JWT Token buraya ekleniyor
+        ], 200);
+    }
+    public function getUserInfo()
+    {
+        $user = new User();
+        return $user->userInfo();
     }
     function UserRegister(Request $request)
     {
